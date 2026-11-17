@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Industrial Revolutions: From Steam Power to Artificial Intelligence</title>
+<style>
+:root {
+  --navy: #172d43;
+  --muted: #607181;
+  --teal: #387570;
+  --line: #dce3e7;
+  --pale: #f4f7f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: white;
+  color: var(--navy);
+  font: 16px/1.6 system-ui, -apple-system, sans-serif;
+}
+header {
+  padding: 20px max(24px, calc((100vw - 1060px)/2));
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+main { max-width: 1060px; margin: auto; padding: 40px 24px; }
+.eyebrow {
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+h1 {
+  font: 400 clamp(32px, 5vw, 52px)/1.15 Georgia, serif;
+  letter-spacing: -1px;
+  margin: 14px 0;
+}
+h1 span { display: block; color: var(--muted); }
+.subtitle, .muted { color: var(--muted); }
+.subtitle { max-width: 650px; }
+.timeline {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 0;
+  margin: 36px 0 12px;
+}
+.timeline li {
+  position: relative;
+  border-top: 2px solid var(--line);
+  padding: 20px 14px 12px 0;
+}
+.timeline li::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #a4b4bc;
+}
+.timeline li.active { border-color: var(--teal); }
+.timeline li.active::before { background: var(--teal); }
+.timeline small, .timeline strong { display: block; }
+.timeline small { color: var(--muted); font-size: 12px; }
+.timeline strong { font-size: 14px; margin: 4px 0; }
+.period-note { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 235px; gap: 24px; }
+.card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 28px;
+  box-shadow: 0 8px 30px #172d4305;
+}
+.topline { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; }
+progress {
+  display: block;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  border: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 16px 0 26px;
+  background: #edf1f2;
+}
+progress::-webkit-progress-bar { background: #edf1f2; }
+progress::-webkit-progress-value { background: var(--teal); }
+progress::-moz-progress-bar { background: var(--teal); }
+.badge {
+  display: inline-block;
+  background: #edf3f2;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 5px 9px;
+}
+h2 {
+  font: 400 26px/1.4 Georgia, serif;
+  margin: 18px 0 10px;
+}
+#question:focus, #results-title:focus { outline: none; }
+.instruction { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+fieldset { padding: 0; margin: 0; border: 0; display: grid; gap: 10px; }
+.answer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  min-height: 62px;
+  padding: 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.answer:hover { background: #f7f9fa; border-color: #8c9da9; }
+.answer.selected { background: #eef3f7; border-color: var(--navy); }
+.answer.correct { background: #eef7f1; border-color: #6d9b7b; }
+.answer.incorrect { background: #fcf1ee; border-color: #bf826d; }
+.answer.locked { cursor: default; }
+.answer input { accent-color: var(--navy); flex-shrink: 0; width: 18px; height: 18px; }
+.answer:focus-within { outline: 3px solid #8db3d0; outline-offset: 2px; }
+.answer-text { flex: 1; }
+.answer-tag { font-size: 11px; font-weight: 700; }
+.feedback {
+  margin-top: 20px;
+  border-left: 3px solid var(--teal);
+  background: #f0f6f3;
+  padding: 16px;
+  font-size: 14px;
+  animation: appear .2s ease;
+}
+.feedback.wrong { border-color: #a56848; background: #fcf5ef; }
+.feedback p { margin: 6px 0 0; }
+.actions {
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+button {
+  background: var(--navy);
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  font: 600 14px system-ui, sans-serif;
+  padding: 14px 22px;
+  min-height: 48px;
+  cursor: pointer;
+}
+button:hover { background: #29465e; }
+button:disabled { background: #e9edef; color: #788791; cursor: not-allowed; }
+button:focus-visible, a:focus-visible, summary:focus-visible {
+  outline: 3px solid #8db3d0;
+  outline-offset: 3px;
+}
+aside { background: var(--pale); border-radius: 8px; padding: 24px; align-self: start; }
+aside h2 { font-size: 24px; margin-top: 0; }
+aside p, aside li { font-size: 13px; color: var(--muted); }
+aside ol { padding-left: 20px; }
+aside li { margin: 14px 0; }
+.privacy { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 24px; }
+.score { font: 60px Georgia, serif; color: var(--teal); margin: 20px 0; }
+.score small { font: 18px system-ui, sans-serif; color: var(--muted); }
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid var(--line);
+  padding: 14px 0;
+  font-size: 14px;
+}
+.summary-row span { white-space: nowrap; color: var(--muted); }
+details { margin: 24px 0; }
+summary { cursor: pointer; font-weight: 600; }
+.review-item { border-bottom: 1px solid var(--line); padding: 15px 0; }
+.review-item h3 { font-size: 15px; }
+.review-item p { font-size: 14px; color: var(--muted); }
+footer {
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  margin-top: 36px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.teacher-guide { font-size: 14px; }
+.teacher-guide h3 { color: var(--navy); }
+code { background: #edf1f3; border-radius: 3px; padding: 2px 4px; }
+[hidden] { display: none !important; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+@keyframes appear {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  aside { display: none; }
+}
+@media (max-width: 520px) {
+  main { padding: 28px 18px; }
+  header { padding: 18px; font-size: 10px; }
+  .timeline { grid-template-columns: 1fr 1fr; row-gap: 14px; }
+  .card { padding: 22px 18px; }
+  h2 { font-size: 23px; }
+  .answer { padding: 12px 10px; }
+  .answer-tag { max-width: 60px; }
+  .actions button { width: 100%; }
+  .summary-row { font-size: 12px; gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<header>IR⁴ &nbsp; THE INDUSTRIAL REVOLUTIONS</header>
+
+<main>
+  <section>
+    <div class="eyebrow">EXPLORE THE IDEAS THAT CHANGED THE WORLD</div>
+    <h1>The Industrial Revolutions
+      <span>From Steam Power to Artificial Intelligence.</span>
+    </h1>
+    <p class="subtitle">Four revolutions. Centuries of transformation.
+      Explore how technology reshaped the way we work, live, and connect.</p>
+    <p class="muted" id="quiz-description">20 questions · Four historical eras · Learn as you go</p>
+  </section>
+
+  <nav aria-label="Timeline of the four Industrial Revolutions">
+    <ol class="timeline" id="timeline"></ol>
+  </nav>
+  <p class="period-note">Dates are approximate. Transformations overlap and unfolded differently across regions.</p>
+
+  <div class="layout">
+    <section class="card" aria-label="Interactive quiz">
+      <div class="topline">
+        <strong id="question-number"></strong>
+        <span class="muted" id="completed"></span>
+      </div>
+      <progress id="progress" value="0" max="20" aria-label="Questions completed"></progress>
+
+      <div id="quiz-view">
+        <span class="badge" id="era-badge"></span>
+        <h2 id="question" tabindex="-1"></h2>
+        <p class="instruction">Select the best answer, then check your reasoning.</p>
+
+        <form id="quiz-form">
+          <fieldset id="answers">
+            <legend class="sr-only">Answer choices</legend>
+          </fieldset>
+          <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+          <div class="actions">
+            <button id="check" type="submit" disabled>Check answer →</button>
+            <button id="next" type="button" hidden>Next question →</button>
+          </div>
+        </form>
+      </div>
+
+      <section id="results" aria-labelledby="results-title" hidden></section>
+      <p id="error" role="alert" hidden></p>
+    </section>
+
+    <aside>
+      <h2>More than remembering dates.</h2>
+      <p>Trace connections between inventions, industry, and everyday life.</p>
+      <ol>
+        <li>Consider the question and choose an answer.</li>
+        <li>Explore the feedback and explanation.</li>
+        <li>Review your strengths across all four revolutions.</li>
+      </ol>
+      <p class="privacy">No login. No tracking.<br>Just room to learn.</p>
+    </aside>
+  </div>
+
+  <footer>
+    A perspective on the past. A foundation for the future.
+
+    <details class="teacher-guide">
+      <summary>Teacher guide &amp; historical context</summary>
+
+      <h3>Editing and adding questions</h3>
+      <p>Open this file in a plain-text editor and find
+        <code>QUESTION BANK</code>. Each question has an ID, era number,
+        prompt, four choices, correct-answer index, and explanation.
+        The correct-answer index is zero-based:
+        <code>0 = A</code>, <code>1 = B</code>,
+        <code>2 = C</code>, <code>3 = D</code>.</p>
+      <p>To add a question, copy an existing question object inside the
+        <code>QUESTIONS</code> array. Give it a unique ID and separate
+        objects with commas. Use an era number from 1 to 4.
+        Update the correct index whenever you reorder choices.</p>
+
+      <h3>Question count and scoring</h3>
+      <p>Find <code>SETTINGS</code> in the script below.
+        <code>questionLimit: null</code> uses every question.
+        Set it to a positive whole number, such as <code>12</code>,
+        to select a balanced random subset across available eras.</p>
+      <p>The score is the percentage correct, rounded to a whole number.
+        The default maximum is 100. Change <code>maximumScore</code>
+        to use another scale. Wrong answers earn zero, with no penalty.
+        Each default question is worth 5 points. Per-era percentages
+        always show the percentage correct within that era.</p>
+
+      <h3>Launching and publishing</h3>
+      <p>Open this HTML file in a browser. It requires no installation,
+        server, Internet connection, login, or external service.
+        JavaScript must be enabled. Refreshing clears the attempt.</p>
+      <p>To publish later, upload this file to a static web host.
+        For faberludens.co.kr, place it in a separate
+        <code>/industrial-revolutions/</code> directory as
+        <code>index.html</code>, then link to that page from your
+        educational website. Confirm the hosting setup and obtain
+        approval before changing the live site.</p>
+      <p>It can also be embedded in an iframe with the quiz URL,
+        a descriptive title, 100% width, and sufficient height.
+        A direct link is often easier on phones. No deployment
+        or live website modification has been performed.</p>
+
+      <h3>Accessibility and privacy</h3>
+      <p>Use Tab to move between controls and arrow keys to move within
+        the answer group. Feedback is announced through a live region.
+        Answers lock after submission. Reduced-motion preferences are
+        respected. No personal information, cookies, analytics,
+        or browser storage are used. Answers exist only in memory.</p>
+      <p>This is a formative learning activity. Correct answers are
+        visible in the source, so it is not a secure examination tool.</p>
+
+      <h3>Historical context</h3>
+      <p>The four-revolution framework is a teaching model with debated
+        boundaries. Digital computers and networking began before the
+        1970s; that period emphasizes wider diffusion. AI also predates
+        the twenty-first century; the fourth-revolution framework
+        emphasizes connected, data-driven systems.</p>
+      <p>Further reading: Encyclopaedia Britannica on the Industrial
+        Revolution and James Watt; The Henry Ford on the moving
+        assembly line; Taylor’s <em>The Principles of Scientific
+        Management</em> (1911); Computer History Museum’s
+        <em>Timeline of Computer History</em>; Internet Society’s
+        <em>A Brief History of the Internet</em>; CERN’s history of
+        the Web; and NIST publications on cyber-physical systems
+        and AI risk management.</p>
+    </details>
+  </footer>
+
+  <noscript>
+    <p>This quiz needs JavaScript. Enable JavaScript in your browser
+      and reopen this file.</p>
+  </noscript>
+</main>
+
+<script>
+"use strict";
+
+/* SETTINGS: teachers can change these values. */
+const SETTINGS = {
+  questionLimit: null,
+  maximumScore: 100
+};
+
+const ERAS = [
+  {
+    id: 1,
+    name: "First Industrial Revolution",
+    short: "Steam & mechanization",
+    dates: "c. 1760–1840"
+  },
+  {
+    id: 2,
+    name: "Second Industrial Revolution",
+    short: "Electricity & mass production",
+    dates: "c. 1870–1914"
+  },
+  {
+    id: 3,
+    name: "Third Industrial Revolution",
+    short: "Computing & digital automation",
+    dates: "From the 1970s"
+  },
+  {
+    id: 4,
+    name: "Fourth Industrial Revolution",
+    short: "AI & connected systems",
+    dates: "21st century"
+  }
+];
+
+/* QUESTION BANK
+   correct: 0 = A, 1 = B, 2 = C, 3 = D
+   Keep each id unique.
+*/
+const QUESTIONS = [
+  {
+    id: "r1-1",
+    era: 1,
+    prompt: "Why did improvements to the steam engine help factories expand beyond fast-flowing rivers?",
+    choices: [
+      "Steam engines made all transport unnecessary.",
+      "Steam supplied mechanical power without depending on a river’s flow.",
+      "Steam engines required no fuel.",
+      "Steam immediately replaced every waterwheel."
+    ],
+    correct: 1,
+    explanation: "Steam engines converted heat from fuel into mechanical work. Where fuel and water were available, factories gained more freedom in location and more reliable power than seasonal river flows allowed."
+  },
+  {
+    id: "r1-2",
+    era: 1,
+    prompt: "What made James Watt’s separate condenser an important improvement to earlier steam engines?",
+    choices: [
+      "It generated electricity directly.",
+      "It eliminated the need for boilers.",
+      "It reduced heat loss by keeping the main cylinder hot.",
+      "It was the first machine to use steam."
+    ],
+    correct: 2,
+    explanation: "Watt’s separately cooled condenser reduced repeated heating and cooling of the cylinder, lowering fuel consumption. He improved existing steam-engine technology rather than inventing steam power itself."
+  },
+  {
+    id: "r1-3",
+    era: 1,
+    prompt: "Mechanized spinning greatly increased yarn output. What pressure did this create within textile production?",
+    choices: [
+      "It encouraged improvements in weaving to process the greater supply of yarn.",
+      "It removed demand for woven cloth.",
+      "It made cotton cultivation obsolete.",
+      "It returned production entirely to household hand looms."
+    ],
+    correct: 0,
+    explanation: "Textile production involved linked stages. Faster spinning could create a weaving bottleneck, encouraging investment in power looms and other changes to increase cloth output."
+  },
+  {
+    id: "r1-4",
+    era: 1,
+    prompt: "Why did early industrial employers increasingly concentrate workers in factories?",
+    choices: [
+      "Factories removed the need for supervision.",
+      "All workers already lived in cities.",
+      "Laws prohibited household production everywhere.",
+      "Large powered machines and coordinated workflows favored centralized production."
+    ],
+    correct: 3,
+    explanation: "Expensive machinery, shared power sources, and coordinated work made centralized production attractive. Factory work also brought closer supervision, regular hours, and new labor discipline."
+  },
+  {
+    id: "r1-5",
+    era: 1,
+    prompt: "Which interpretation best explains industrialization’s relationship with urban growth in Britain?",
+    choices: [
+      "Urban growth ended inequality as soon as factories opened.",
+      "Factory employment attracted migrants, while rapid growth strained housing and sanitation.",
+      "Every city grew at the same rate.",
+      "Factory growth caused rural populations to disappear completely."
+    ],
+    correct: 1,
+    explanation: "Industrial towns drew people seeking wages. Housing, water supplies, and sanitation often failed to keep pace, contributing to overcrowding and disease alongside expanding economic opportunities."
+  },
+  {
+    id: "r2-1",
+    era: 2,
+    prompt: "How did electric motors change factory organization compared with a single central steam engine?",
+    choices: [
+      "They required every machine to stand beside a boiler.",
+      "They eliminated the need for skilled maintenance.",
+      "They allowed machines to be powered individually and arranged around the production workflow.",
+      "They made all factories operate without energy."
+    ],
+    correct: 2,
+    explanation: "Individual electric motors reduced reliance on central shafts and belts. Factories could reorganize machinery for more efficient workflows, although these gains required investment and took time to spread."
+  },
+  {
+    id: "r2-2",
+    era: 2,
+    prompt: "Why did Ford’s moving assembly line lower the cost of producing the Model T?",
+    choices: [
+      "Standardized parts and repeated tasks reduced assembly time per vehicle.",
+      "Every car was customized from scratch.",
+      "It replaced all workers with computers.",
+      "It eliminated the need to coordinate suppliers."
+    ],
+    correct: 0,
+    explanation: "The moving assembly line introduced at Ford in 1913 combined standardized parts, specialized tasks, and a controlled flow of work. Higher throughput lowered unit costs but also made work more repetitive."
+  },
+  {
+    id: "r2-3",
+    era: 2,
+    prompt: "What was a major consequence of processes such as Bessemer steelmaking and open-hearth production?",
+    choices: [
+      "Steel became too expensive for construction.",
+      "Iron ore was no longer needed.",
+      "Wood replaced metal in railway rails.",
+      "Cheaper steel supported larger rail networks, bridges, and buildings."
+    ],
+    correct: 3,
+    explanation: "These processes helped make steel available in greater quantities at lower cost. Its strength and durability supported transport infrastructure, machinery, and new forms of construction."
+  },
+  {
+    id: "r2-4",
+    era: 2,
+    prompt: "What did industrial synthetic dyes and expanding telegraph networks have in common?",
+    choices: [
+      "Both relied primarily on household craft production.",
+      "Both illustrate how scientific knowledge and technical networks expanded industrial capabilities.",
+      "Both were powered by microprocessors.",
+      "Both eliminated international trade."
+    ],
+    correct: 1,
+    explanation: "Synthetic dyes linked laboratory chemistry with manufacturing, while telegraph networks accelerated long-distance communication. Both supported more complex industrial economies, though the telegraph originated before this period."
+  },
+  {
+    id: "r2-5",
+    era: 2,
+    prompt: "Frederick Winslow Taylor’s scientific management sought to raise productivity mainly by doing what?",
+    choices: [
+      "Letting each worker choose entirely different methods.",
+      "Replacing time measurement with intuition.",
+      "Studying tasks systematically and separating work planning from execution.",
+      "Abolishing managerial control."
+    ],
+    correct: 2,
+    explanation: "Taylor advocated time studies, standardized methods, and managerial planning. These practices aimed to improve efficiency but could reduce worker autonomy and intensify labor."
+  },
+  {
+    id: "r3-1",
+    era: 3,
+    prompt: "Why was the microprocessor important for the spread of digital automation from the 1970s?",
+    choices: [
+      "It integrated CPU functions on a chip, reducing the size and cost of computing.",
+      "It made software unnecessary.",
+      "It generated electricity for factories.",
+      "It replaced all semiconductor devices with vacuum tubes."
+    ],
+    correct: 0,
+    explanation: "Microprocessors placed central processing functions on integrated circuits. Alongside advances in semiconductor manufacturing, this made programmable computing practical in many more products and industrial systems."
+  },
+  {
+    id: "r3-2",
+    era: 3,
+    prompt: "What distinguishes a programmable industrial controller from a machine controlled only by fixed mechanical linkages?",
+    choices: [
+      "It never needs sensors.",
+      "It can perform only one operation for its entire life.",
+      "It operates without physical machinery.",
+      "Its control behavior can be changed through software rather than rebuilding all of its mechanisms."
+    ],
+    correct: 3,
+    explanation: "Programmable controllers allow engineers to change operating sequences in software. This increased flexibility while still relying on sensors, actuators, safe engineering, and physical production equipment."
+  },
+  {
+    id: "r3-3",
+    era: 3,
+    prompt: "Which statement accurately distinguishes the Internet from the World Wide Web?",
+    choices: [
+      "They are identical names for the same invention.",
+      "The Internet connects networks; the Web is a service using linked pages over that infrastructure.",
+      "The Web existed before computer networks.",
+      "The Internet began only when smartphones appeared."
+    ],
+    correct: 1,
+    explanation: "The Internet developed from earlier networking research, including ARPANET, and adoption of TCP/IP. Tim Berners-Lee developed the Web around 1989–1991 as a system of linked information using that network infrastructure."
+  },
+  {
+    id: "r3-4",
+    era: 3,
+    prompt: "How did computer-aided design and computer-controlled manufacturing change the relationship between design and production?",
+    choices: [
+      "They removed the need to test products.",
+      "They prevented revisions once a design was saved.",
+      "They allowed digital designs and instructions to be revised and transferred more efficiently.",
+      "They made all physical materials interchangeable."
+    ],
+    correct: 2,
+    explanation: "CAD and computer-controlled equipment shortened the path from design to manufacture. Digital information could be edited and reused, although compatibility, quality control, and physical constraints remained important."
+  },
+  {
+    id: "r3-5",
+    era: 3,
+    prompt: "Why did software become a major source of economic value during the digital revolution?",
+    choices: [
+      "Reusable code could coordinate processes and deliver information services across many computers.",
+      "Software required a new physical factory for every copy.",
+      "Programs could function without any hardware.",
+      "Digital information eliminated all production costs."
+    ],
+    correct: 0,
+    explanation: "Software encoded reusable instructions for processing information and controlling machines. Its replication and distribution enabled new services and business models, while development, hardware, and maintenance still carried costs."
+  },
+  {
+    id: "r4-1",
+    era: 4,
+    prompt: "Which example best distinguishes machine learning from a purely rule-based automation system?",
+    choices: [
+      "A timer switches a lamp off at 10 p.m.",
+      "A thermostat follows a fixed threshold.",
+      "A conveyor runs at a preset speed.",
+      "A model learns patterns in labeled images to identify possible product defects."
+    ],
+    correct: 3,
+    explanation: "Machine learning estimates patterns from data rather than relying only on explicitly written decision rules. Performance depends on training data and validation; learned predictions can still be wrong."
+  },
+  {
+    id: "r4-2",
+    era: 4,
+    prompt: "How can an Internet of Things system enable predictive maintenance?",
+    choices: [
+      "By guaranteeing machines never fail.",
+      "By collecting sensor readings that can reveal deterioration before a breakdown.",
+      "By disconnecting equipment from all monitoring.",
+      "By replacing every maintenance worker with a sensor."
+    ],
+    correct: 1,
+    explanation: "Connected sensors can report vibration, temperature, and other conditions. Analyzing these signals can flag emerging faults, helping maintenance teams intervene earlier; predictions remain uncertain."
+  },
+  {
+    id: "r4-3",
+    era: 4,
+    prompt: "What makes a robotic production cell a cyber-physical system?",
+    choices: [
+      "It contains metal components.",
+      "It works only when disconnected from software.",
+      "Sensors, computation, and actuators form a feedback loop between digital control and physical processes.",
+      "It uses a fixed schedule printed on paper."
+    ],
+    correct: 2,
+    explanation: "Cyber-physical systems link computation and physical processes through sensing and action. Feedback lets a controller respond to changing conditions, such as a robot adjusting its movement after detecting a part’s position."
+  },
+  {
+    id: "r4-4",
+    era: 4,
+    prompt: "A factory trains an AI model only on data from one machine type. Why might it perform poorly on a different machine?",
+    choices: [
+      "The new machine’s data may differ from the patterns represented in training.",
+      "Larger datasets always prevent errors.",
+      "AI predictions are independent of training data.",
+      "All industrial sensors measure identical conditions."
+    ],
+    correct: 0,
+    explanation: "A change in equipment or operating conditions can create a distribution shift. More data alone is insufficient if it is unrepresentative; models need evaluation under the conditions where they will be used."
+  },
+  {
+    id: "r4-5",
+    era: 4,
+    prompt: "Which comparison best captures the relationship between the Third and Fourth Industrial Revolutions?",
+    choices: [
+      "The fourth abandoned digital computing.",
+      "The third already used steam as its main new technology.",
+      "The fourth began on the same date in every country.",
+      "The fourth builds on digital computing through more connected, data-driven, and adaptive systems."
+    ],
+    correct: 3,
+    explanation: "The fourth-revolution framework emphasizes connected systems, AI, and integration of digital and physical processes. It builds on earlier digital technologies; the boundaries and period labels are debated rather than universally fixed."
+  }
+];
+
+/* APPLICATION LOGIC */
+(() => {
+  const $ = id => document.getElementById(id);
+
+  let attempt = [];
+  let responses = [];
+  let position = 0;
+  let locked = false;
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function shuffle(items) {
+    const copy = [...items];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function validate() {
+    if (!QUESTIONS.length) {
+      throw new Error("The question bank is empty.");
+    }
+
+    const ids = new Set();
+
+    for (const q of QUESTIONS) {
+      if (
+        !q.id ||
+        ids.has(q.id) ||
+        !ERAS.some(era => era.id === q.era) ||
+        typeof q.prompt !== "string" ||
+        !q.prompt.trim() ||
+        !Array.isArray(q.choices) ||
+        q.choices.length !== 4 ||
+        q.choices.some(c => typeof c !== "string" || !c.trim()) ||
+        !Number.isInteger(q.correct) ||
+        q.correct < 0 ||
+        q.correct > 3 ||
+        typeof q.explanation !== "string" ||
+        !q.explanation.trim()
+      ) {
+        throw new Error(
+          "Please check the question bank: each question needs a unique ID, " +
+          "a valid era, a prompt, four choices, a correct index from 0 to 3, " +
+          "and an explanation."
+        );
+      }
+      ids.add(q.id);
+    }
+
+    if (
+      SETTINGS.questionLimit !== null &&
+      (!Number.isInteger(SETTINGS.questionLimit) ||
+       SETTINGS.questionLimit < 1)
+    ) {
+      throw new Error("questionLimit must be null or a positive whole number.");
+    }
+
+    if (
+      !Number.isFinite(SETTINGS.maximumScore) ||
+      SETTINGS.maximumScore <= 0
+    ) {
+      throw new Error("maximumScore must be a positive number.");
+    }
+  }
+
+  function selectQuestions() {
+    const limit = Math.min(
+      SETTINGS.questionLimit ?? QUESTIONS.length,
+      QUESTIONS.length
+    );
+
+    const groups = shuffle(ERAS).map(era =>
+      shuffle(QUESTIONS.filter(q => q.era === era.id))
+    );
+
+    const selected = [];
+
+    while (selected.length < limit) {
+      for (const group of groups) {
+        if (group.length && selected.length < limit) {
+          selected.push(group.pop());
+        }
+      }
+    }
+
+    return shuffle(selected);
+  }
+
+  function renderTimeline(activeEra) {
+    $("timeline").replaceChildren(
+      ...ERAS.map(era => {
+        const li = element("li", era.id === activeEra ? "active" : "");
+        if (era.id === activeEra) {
+          li.setAttribute("aria-current", "step");
+        }
+        li.append(
+          element("small", "", era.dates),
+          element("strong", "", era.name.replace(" Industrial", "")),
+          element("small", "", era.short)
+        );
+        return li;
+      })
+    );
+  }
+
+  function updateProgress() {
+    $("completed").textContent =
+      `${responses.length} / ${attempt.length} completed`;
+    $("progress").max = attempt.length;
+    $("progress").value = responses.length;
+    $("progress").setAttribute(
+      "aria-valuetext",
+      `${responses.length} of ${attempt.length} questions completed`
+    );
+  }
+
+  function renderQuestion(moveFocus = true) {
+    locked = false;
+
+    const q = attempt[position];
+    const era = ERAS.find(item => item.id === q.era);
+
+    $("question-number").textContent =
+      `QUESTION ${position + 1} OF ${attempt.length}`;
+    $("question").textContent = q.prompt;
+    $("era-badge").textContent = era.name;
+
+    const legend = element("legend", "sr-only", "Answer choices");
+
+    const labels = q.choices.map((choice, index) => {
+      const label = element("label", "answer");
+      const input = document.createElement("input");
+
+      input.type = "radio";
+      input.name = "answer";
+      input.value = String(index);
+      input.required = true;
+
+      const text = element(
+        "span",
+        "answer-text",
+        `${"ABCD"[index]}. ${choice}`
+      );
+
+      label.append(input, text);
+      return label;
+    });
+
+    $("answers").replaceChildren(legend, ...labels);
+    $("feedback").hidden = true;
+    $("feedback").replaceChildren();
+    $("check").hidden = false;
+    $("check").disabled = true;
+    $("next").hidden = true;
+
+    renderTimeline(q.era);
+    updateProgress();
+
+    if (moveFocus) {
+      $("question").focus();
+    }
+  }
+
+  function start(moveFocus = true) {
+    attempt = selectQuestions();
+    responses = [];
+    position = 0;
+    locked = false;
+
+    $("results").hidden = true;
+    $("results").replaceChildren();
+    $("quiz-view").hidden = false;
+    $("quiz-description").textContent =
+      `${attempt.length} questions · Four historical eras · Learn as you go`;
+
+    renderQuestion(moveFocus);
+  }
+
+  $("answers").addEventListener("change", () => {
+    if (locked) return;
+
+    const inputs = $("answers").querySelectorAll("input");
+
+    inputs.forEach(input => {
+      input.closest("label").classList.toggle("selected", input.checked);
+    });
+
+    $("check").disabled = !Array.from(inputs).some(input => input.checked);
+  });
+
+  $("quiz-form").addEventListener("submit", event => {
+    event.preventDefault();
+
+    if (locked) return;
+
+    const selected = $("answers").querySelector("input:checked");
+    if (!selected) return;
+
+    // Lock immediately so repeated submissions cannot add another response.
+    locked = true;
+
+    const q = attempt[position];
+    const answer = Number(selected.value);
+    const correct = answer === q.correct;
+
+    responses.push({ question: q, answer, correct });
+
+    $("answers").querySelectorAll("input").forEach((input, index) => {
+      input.disabled = true;
+
+      const label = input.closest("label");
+      label.classList.remove("selected");
+      label.classList.add("locked");
+
+      if (index === q.correct) {
+        label.classList.add("correct");
+        label.append(element("span", "answer-tag", "✓ Correct"));
+      } else if (index === answer) {
+        label.classList.add("incorrect");
+        label.append(element("span", "answer-tag", "× Your choice"));
+      }
+    });
+
+    $("feedback").className = correct ? "feedback" : "feedback wrong";
+    $("feedback").replaceChildren(
+      element(
+        "strong",
+        "",
+        correct
+          ? "Correct. Here’s the connection."
+          : "Not quite. Here’s the connection."
+      ),
+      element("p", "", q.explanation)
+    );
+    $("feedback").hidden = false;
+
+    $("check").disabled = true;
+    $("check").hidden = true;
+    $("next").textContent =
+      position === attempt.length - 1
+        ? "See my results →"
+        : "Next question →";
+    $("next").hidden = false;
+
+    updateProgress();
+    $("next").focus({ preventScroll: true });
+  });
+
+  $("next").addEventListener("click", () => {
+    if (!locked) return;
+
+    if (position + 1 < attempt.length) {
+      position++;
+      renderQuestion();
+    } else {
+      renderResults();
+    }
+  });
+
+  function renderResults() {
+    $("quiz-view").hidden = true;
+    $("results").hidden = false;
+    $("question-number").textContent = "YOUR LEARNING SUMMARY";
+    renderTimeline(null);
+
+    const correctCount = responses.filter(r => r.correct).length;
+    const score = Math.round(
+      correctCount / attempt.length * SETTINGS.maximumScore
+    );
+
+    const title = element("h2", "", "A journey worth reflecting on.");
+    title.id = "results-title";
+    title.tabIndex = -1;
+
+    const scoreDisplay = element("div", "score", String(score));
+    scoreDisplay.append(
+      element("small", "", ` / ${SETTINGS.maximumScore}`)
+    );
+
+    const description = element(
+      "p",
+      "muted",
+      `${correctCount} of ${attempt.length} correct. ` +
+      (correctCount === attempt.length
+        ? "Excellent connections across the eras."
+        : "Review the explanations to strengthen your understanding.")
+    );
+
+    $("results").replaceChildren(title, scoreDisplay, description);
+
+    for (const era of ERAS) {
+      const items = responses.filter(r => r.question.era === era.id);
+      const correct = items.filter(r => r.correct).length;
+
+      const row = element("div", "summary-row");
+      row.append(
+        element("strong", "", era.name),
+        element(
+          "span",
+          "",
+          items.length
+            ? `${correct}/${items.length} · ${Math.round(correct / items.length * 100)}%`
+            : "Not included"
+        )
+      );
+      $("results").append(row);
+    }
+
+    const review = element("details");
+    review.append(
+      element("summary", "", "Review all answers & explanations")
+    );
+
+    responses.forEach((response, index) => {
+      const q = response.question;
+      const article = element("article", "review-item");
+
+      article.append(
+        element("h3", "", `${index + 1}. ${q.prompt}`),
+        element(
+          "p",
+          "",
+          `${response.correct ? "✓" : "×"} Your answer: ${q.choices[response.answer]}`
+        ),
+        element("p", "", `Correct answer: ${q.choices[q.correct]}`),
+        element("p", "", q.explanation)
+      );
+
+      review.append(article);
+    });
+
+    const restart = element("button", "", "Restart quiz ↻");
+    restart.type = "button";
+    restart.addEventListener("click", () => start());
+
+    $("results").append(review, restart);
+    title.focus();
+  }
+
+  try {
+    validate();
+    start(false);
+  } catch (error) {
+    $("quiz-view").hidden = true;
+    $("error").hidden = false;
+    $("error").textContent = error.message;
+  }
+})();
+</script>
+</body>
+</html>
